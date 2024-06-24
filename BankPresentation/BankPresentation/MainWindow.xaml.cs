@@ -30,5 +30,10 @@ namespace BankPresentation
             serviceCollection.AddWpfBlazorWebView();
             Resources.Add("services", serviceCollection.BuildServiceProvider());
         }
+
+        private void OpenOnClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -1,7 +1,10 @@
 ﻿@page "/"
 
-index
+<a href="/Login">asdasd</a>
 
 @code {
-
+    protected override async Task OnInitializedAsync()
+    {
+        navManager.NavigateTo("/Login");
+    }
 }
