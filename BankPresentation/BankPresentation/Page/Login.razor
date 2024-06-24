@@ -1,0 +1,74 @@
+﻿@* <div class="form">
+        <div class="row">
+            <div class="title">
+                은행
+            </div>
+            <select>
+            </select>
+        </div>
+        <div class="row">
+            <div class="title">
+                보내는 사람
+            </div>
+            <div class="inputbox">
+                <select @onchange="OnChangedBank">
+                    @foreach(var item in memberList)
+                    {
+                        <option value="@item">@item.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="title">
+                은행
+            </div>
+            <select>
+                @foreach (var item in bankList)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+        <div class="row">
+            <div class="title">
+                받는 사람
+            </div>
+            <select>
+                @foreach (var item in memberList)
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="title">
+                송금 할 금액
+            </div>
+            <div class="inputbox">
+                <input type="number"/>
+            </div>
+        </div>
+    </div> *@
+
+    asdasd
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    private void OnChangedBank(ChangeEventArgs args) // 선택된 은행의 해당하는 맴버 리스트
+    {
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}
