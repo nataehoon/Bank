@@ -13,9 +13,6 @@
     <SourceRoot Include="C:\Users\ebsoft\.nuget\packages\" />
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.components.webview.wpf\6.0.553\build\Microsoft.AspNetCore.Components.WebView.Wpf.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.components.webview.wpf\6.0.553\build\Microsoft.AspNetCore.Components.WebView.Wpf.props')" />
+    <Import Project="$(NuGetPackageRoot)telerik.ui.for.blazor\6.0.2\buildTransitive\Telerik.UI.for.Blazor.props" Condition="Exists('$(NuGetPackageRoot)telerik.ui.for.blazor\6.0.2\buildTransitive\Telerik.UI.for.Blazor.props')" />
   </ImportGroup>
-  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\ebsoft\.nuget\packages\microsoft.web.webview2\1.0.1210.39</PkgMicrosoft_Web_WebView2>
-  </PropertyGroup>
 </Project>
