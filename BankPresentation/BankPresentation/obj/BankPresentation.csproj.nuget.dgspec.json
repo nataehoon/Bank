@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ebsoft\\Desktop\\Work\\Sub\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {}
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ebsoft\\Desktop\\Work\\Sub\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ebsoft\\Desktop\\Work\\Sub\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
+        "projectUniqueName": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
         "projectName": "BankPresentation",
-        "projectPath": "C:\\Users\\ebsoft\\Desktop\\Work\\Sub\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
-        "packagesPath": "C:\\Users\\ebsoft\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ebsoft\\Desktop\\Work\\Sub\\Bank\\BankPresentation\\BankPresentation\\obj\\",
+        "projectPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
+        "packagesPath": "C:\\Users\\NADAENG\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ebsoft\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NADAENG\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://nuget.telerik.com/v3/index.json": {}
         },
@@ -46,6 +51,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Blazored.SessionStorage": {
+              "target": "Package",
+              "version": "[2.4.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
             "Telerik.UI.for.Blazor": {
               "target": "Package",
               "version": "[6.0.2, )"
@@ -70,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

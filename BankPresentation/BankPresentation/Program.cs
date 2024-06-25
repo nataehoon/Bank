@@ -1,14 +1,19 @@
-using BankPresentation.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+global using Blazored.SessionStorage;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Web;
+global using BankPresentation.Common;
+global using BankPresentation.Models;
+global using BankPresentation.Pages;
+global using BankPresentation.Service;
+global using BankPresentation.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTelerikBlazor();
+builder.Services.AddBlazoredSessionStorage();
 
 var app = builder.Build();
 
