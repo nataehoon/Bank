@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj": {}
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj": {
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj",
+        "projectUniqueName": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj",
         "projectName": "BankApplication",
-        "projectPath": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj",
-        "packagesPath": "C:\\Users\\82103\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\obj\\",
+        "projectPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\BankApplication.csproj",
+        "packagesPath": "C:\\Users\\NADAENG\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankApplication\\BankApplication\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\82103\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NADAENG\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -27,7 +27,8 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -50,6 +51,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[6.0.31, )"
+            },
             "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
               "target": "Package",
               "version": "[1.20.1, )"
