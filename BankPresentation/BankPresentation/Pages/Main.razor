@@ -1,7 +1,47 @@
 ﻿@page "/main"
 
-<h3>Main</h3>
+@if (!Loaded)
+{
+    
+}
+else
+{
+    
+}
 
 @code {
+    public string userId { get; set; }
 
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                navManager.NavigateTo("/Login");
+            }
+        }
+        catch
+        {
+            
+        }
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
 }

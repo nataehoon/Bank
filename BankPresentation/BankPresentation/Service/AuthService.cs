@@ -2,6 +2,7 @@
 using BankPresentation.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Telerik.SvgIcons;
 
 namespace BankPresentation.Service
 {
@@ -11,18 +12,19 @@ namespace BankPresentation.Service
         {
             try
             {
-                APIServerInfo apiinfo = new();
-                apiinfo.SERVERIP = "";
-                apiinfo.SERVERPORT = "";
+                string data = "{ \"ID\":\"" + id + "\", \"PW\":\"" + pw + "\"}";
 
-                string data = "{ \"ID\":" + id + ", \"PW\":" + pw + "}";
+                string result = APIService.PostAPI(data, "Login");
 
-                string result = APIService.PostAPI("Login", data, JsonConvert.SerializeObject(apiinfo));
-
-                JObject jdata = JObject.Parse(result);
-                if (jdata.ContainsKey("data"))
+                if (!string.IsNullOrEmpty(result))
                 {
-                    return jdata["data"].ToString();
+                    string logindata = string.Empty;
+                    JObject jdata = JObject.Parse(result);
+                    if (jdata.ContainsKey("result"))
+                    {
+                        logindata = jdata["result"].ToString();
+                    }
+                    return logindata;
                 }
                 else
                 {
@@ -30,6 +32,33 @@ namespace BankPresentation.Service
                 }
             }
             catch (Exception ex)
+            {
+                Logs.Exception(ex);
+                return null;
+            }
+        }
+
+        public static string GetMemberList()
+        {
+            try
+            {
+                string result = APIService.PostAPI("", "GetMemberList");
+                Console.WriteLine(result);
+
+                string returnData = string.Empty;
+                JObject jdata = JObject.Parse(result);
+                if (jdata.ContainsKey("data"))
+                {
+                    returnData = jdata["data"].ToString();
+                }
+                else
+                {
+                    returnData = string.Empty;
+                }
+
+                return returnData;
+            }
+            catch(Exception ex)
             {
                 Logs.Exception(ex);
                 return null;
