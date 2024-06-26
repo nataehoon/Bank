@@ -1,4 +1,4 @@
-﻿namespace BankApplication.Models
+﻿namespace BankPresentation.Models
 {
     public class Member
     {
@@ -6,6 +6,6 @@
         public string? NAME { get; set; }
         public string PW { get; set; }
         public string? EMAIL { get; set; }
-        public string? IMG_URL { get; set; }
+        public string IMG_URL { get; set; }
     }
 }

@@ -1,0 +1,55 @@
+﻿
+@if (!Loaded)
+{
+
+}
+else
+{
+    <TelerikAppBar ThemeColor="@ThemeConstants.AppBar.ThemeColor.Primary">
+        <AppBarSection>
+            <a href="/main"><span class="header-title">Bank Service</span></a>
+        </AppBarSection>
+        
+        @if (!string.IsNullOrEmpty(userId))
+        {
+            <AppBarSpacer />
+             <AppBarSection>
+                <UserInfo userId="@userId" callPoint="header"></UserInfo>
+            </AppBarSection>
+        }
+       
+    </TelerikAppBar>
+}
+
+
+@code {
+    private string userId { get; set; }
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+        }
+        catch
+        {
+
+        }
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}
