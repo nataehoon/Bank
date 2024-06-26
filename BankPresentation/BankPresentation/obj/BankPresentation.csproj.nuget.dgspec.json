@@ -1,37 +1,38 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {}
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {}
   },
   "projects": {
-    "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {
+    "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
+        "projectUniqueName": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
         "projectName": "BankPresentation",
-        "projectPath": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
-        "packagesPath": "C:\\Users\\82103\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\82103\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\obj\\",
+        "projectPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\BankPresentation.csproj",
+        "packagesPath": "C:\\Users\\NADAENG\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\NADAENG\\Desktop\\Work\\Bank\\BankPresentation\\BankPresentation\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\82103\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NADAENG\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows"
+          "net6.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0-windows7.0": {
-            "targetAlias": "net6.0-windows",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -47,12 +48,20 @@
         }
       },
       "frameworks": {
-        "net6.0-windows7.0": {
-          "targetAlias": "net6.0-windows",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Components.WebView.WindowsForms": {
+            "Blazored.SessionStorage": {
               "target": "Package",
-              "version": "[6.0.553, )"
+              "version": "[2.4.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Telerik.UI.for.Blazor": {
+              "target": "Package",
+              "version": "[6.0.2, )"
             }
           },
           "imports": [
@@ -67,11 +76,11 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
-            },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
-              "privateAssets": "none"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"

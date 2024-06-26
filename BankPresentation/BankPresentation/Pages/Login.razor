@@ -1,0 +1,119 @@
+﻿@page "/Login"
+
+@if (!Loaded)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="center">
+        <TelerikCard Width="380px">
+            <CardHeader>
+                <CardTitle><h2>Login</h2></CardTitle>
+            </CardHeader>
+
+            <CardImage Src="images/tasklogin.jpg"></CardImage>
+
+            <CardBody>
+                <TelerikGridLayout ColumnSpacing="10px">
+                    <GridLayoutColumns>
+                        <GridLayoutColumn Width="Auto"></GridLayoutColumn>
+                    </GridLayoutColumns>
+                    <GridLayoutRows>
+                        <GridLayoutRow Height="50px"></GridLayoutRow>
+                        <GridLayoutRow Height="50px"></GridLayoutRow>
+                    </GridLayoutRows>
+                    <GridLayoutItems>
+                        <GridLayoutItem Row="1" Column="1">
+                            <TelerikTextBox @bind-Value="@Id" Name="email" Id="email" Placeholder="Enter Your User ID" FillMode="flat" />
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="2" Column="1">
+                            <span @onkeydown="@Enter">
+                                <TelerikTextBox @bind-Value="@Pw" Password="true" Placeholder="Enter Your Password" FillMode="flat" />
+                            </span>
+                        </GridLayoutItem>
+                    </GridLayoutItems>
+                </TelerikGridLayout>
+            </CardBody>
+            <CardActions Layout="@CardActionsLayout.Stretch">
+                <TelerikButton Title="사용자 로그인" Class="tooltip-target full-width-button"
+                               FillMode="@(ThemeConstants.Button.FillMode.Solid)"
+                               ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                               OnClick="@EnterLogin">
+                    <img src="images/button/20/login.png" /> Login
+                </TelerikButton>
+@*                 <label class="text-center">
+                    <TelerikCheckBox @bind-Value="@LoginIsChecked"></TelerikCheckBox>&nbsp; login Id 기억하기.
+                </label>
+ *@         </CardActions>
+        </TelerikCard>
+    </div>
+}
+
+@code {
+    [CascadingParameter] public DialogFactory Dialogs { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);            
+        }
+    }
+
+    private string Id { get; set; }
+    private string Pw { get; set; }
+    private void EnterLogin()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                Dialogs.AlertAsync("아이디를 입력해 주세요.");
+            }
+            if (string.IsNullOrEmpty(Pw))
+            {
+                Dialogs.AlertAsync("비밀번호를 입력해 주세요.");
+            }
+
+            string login = AuthService.Login(Id, Pw);
+
+            if (login.Equals("ok"))
+            {
+                sessionStorage.SetItemAsync<string>("userId", Id);
+                navManager.NavigateTo("/main", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        try
+        {
+            if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            {
+                EnterLogin();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}
