@@ -1,0 +1,45 @@
+﻿@page "/Admin/config"
+
+@if (!Loaded)
+{
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
+}
+else
+{
+    <TelerikTabStrip>
+        <TabStripTab>
+            <HeaderTemplate>
+                    <strong>&nbsp; 은행 관리 </strong>
+                </HeaderTemplate>
+                <Content>
+
+                </Content>
+        </TabStripTab>
+    </TelerikTabStrip>
+}
+
+@code {
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}

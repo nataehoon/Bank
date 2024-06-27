@@ -1,19 +1,29 @@
 ﻿
 @if (!Loaded)
 {
-
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
 }
 else
 {
     <TelerikAppBar ThemeColor="@ThemeConstants.AppBar.ThemeColor.Primary">
+        
         <AppBarSection>
             <a href="/main"><span class="header-title">Bank Service</span></a>
         </AppBarSection>
-        
+
+        <AppBarSpacer />
         @if (!string.IsNullOrEmpty(userId))
         {
-            <AppBarSpacer />
-             <AppBarSection>
+            <AppBarSection>
+                <TelerikButton OnClick="Config"
+                                 Size="@ThemeConstants.Button.Size.Large">
+                    <img src="css/open-iconic//font/fonts/open-iconic.svg" />
+                </TelerikButton>
+            </AppBarSection>
+
+            <AppBarSection>
                 <UserInfo userId="@userId" callPoint="header"></UserInfo>
             </AppBarSection>
         }
@@ -45,9 +55,21 @@ else
     {
         try
         {
-            
+
         }
         catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task Config()
+    {
+        try
+        {
+            navManager.NavigateTo("/Admin/config", true);
+        }
+        catch(Exception ex)
         {
             Logs.Exception(ex);
         }
