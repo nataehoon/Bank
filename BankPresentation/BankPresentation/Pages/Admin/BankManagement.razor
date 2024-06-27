@@ -1,0 +1,165 @@
+﻿
+@if (!Loaded)
+{
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
+}
+else
+{
+    <div>
+        <div class="same-row">
+            <div style="width:10%">
+                은행명
+            </div>
+            <div style="width:80%">
+                <TelerikTextBox @bind-Value="@bankName" Placeholder="은행명을 입력하세요."></TelerikTextBox>
+            </div>
+            <div style="width:10%">
+                <TelerikButton OnClick="AddBankSave"
+                                Size="@ThemeConstants.Button.Size.Medium"
+                                ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
+                                저장
+                </TelerikButton>
+            </div>
+        </div>
+    </div>
+    <div>
+        <TelerikGrid Data="bankList" 
+                            Pageable=true 
+                            @bind-PageSize="@RowCountValue"
+                            @ref="@TelerikGridRef">
+            <GridSettings>
+                <GridPagerSettings InputType="@InputType" PageSizes="@PageSizes" Position="@PagerPosition" />
+            </GridSettings>
+            <GridToolBarTemplate>
+                <GridSearchBox Placeholder="검색" />
+            </GridToolBarTemplate>
+            <GridExport>
+                <GridExcelExport FileName="@ExcelFileName" AllPages="@ExportAllPages" OnBeforeExport="@OnBeforeExcelExport" />
+            </GridExport>
+            <GridColumns>
+                <GridColumn Field="@nameof(Bank.BANK_NAME)" Title="은행명"></GridColumn> 
+                <GridColumn>
+                    <Template>
+                        @{
+                            var data = context as Bank;
+                        }
+                        <TelerikButton OnClick="@(() => DeleteBank(data))"
+                                        Size="@ThemeConstants.Button.Size.Medium"
+                                        Icon="@SvgIcon.Trash"
+                                        ThemeColor="@ThemeConstants.Button.ThemeColor.Error"></TelerikButton>
+                    </Template>
+                </GridColumn>
+            </GridColumns>
+        </TelerikGrid>
+    </div>
+}
+
+@code {
+    [CascadingParameter] public DialogFactory Dialogs { get; set; }
+
+    private int RowCountValue { get; set; } = 5;
+    private PagerInputType InputType { get; set; }
+    private bool ShowPageSizeDropdown { get; set; } = true;
+    private List<int?> PageSizes => ShowPageSizeDropdown ? new List<int?> { 5, 10, 25, 50, null } : null;
+    private PagerPosition PagerPosition { get; set; } = PagerPosition.Bottom;
+
+    private TelerikGrid<Bank> TelerikGridRef { get; set; } = new();
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<Bank> bankList { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            string bankData = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankData))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private string bankName { get; set; }
+    private async Task AddBankSave()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(bankName))
+            {
+                await Dialogs.AlertAsync("은행명을 입력해 주세요", "BankService");
+                return;
+            }
+
+            string apidata = BankingService.AddBank(bankName);
+            if (apidata.Equals("ok"))
+            {
+                await Dialogs.AlertAsync("성공적으로 저장되었습니다.", "BankService");
+            }
+            else
+            {
+                await Dialogs.AlertAsync("저장을 실패하였습니다. 잠시 후 다시 시도해주세요.", "BankService");
+                return;
+            }
+
+            bankList = new();
+            await LoadData();
+            TelerikGridRef.Rebind();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task DeleteBank(Bank data)
+    {
+        try
+        {
+            BankingService.RemoveBank(data.BANK_ID);
+
+            bankList = new();
+            await LoadData();
+            TelerikGridRef.Rebind();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private bool ExportAllPages { get; set; }
+    private string ExcelFileName { get; set; } = "BankList-" + DateTime.Now.ToString("yyyyMMdd_HHmmssfff");
+    private List<string> ExportColumns { get; set; } = new List<string>();
+    private bool CancelExport { get; set; }
+    private void OnBeforeExcelExport(GridBeforeExcelExportEventArgs args)
+    {
+        try
+        {
+
+            if (ExportColumns.Any())
+            {
+                args.Columns = args.Columns.Where(col => ExportColumns.Contains(col.Field)).ToList();
+            }
+
+            args.IsCancelled = CancelExport;
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}

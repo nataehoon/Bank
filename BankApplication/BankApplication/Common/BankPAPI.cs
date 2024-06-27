@@ -8,8 +8,5 @@ namespace BankApplication.Common
         {
 
         }
-
-        public DbSet<Member> members { get; set; } = null!;
-        public DbSet<Bank> banks { get; set; } = null!;
     }
 }

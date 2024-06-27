@@ -43,17 +43,12 @@ namespace BankPresentation.Service
             try
             {
                 string result = APIService.PostAPI("", "GetMemberList");
-                Console.WriteLine(result);
 
                 string returnData = string.Empty;
                 JObject jdata = JObject.Parse(result);
-                if (jdata.ContainsKey("data"))
+                if (jdata.ContainsKey("result") && jdata["result"].ToString().Equals("ok"))
                 {
                     returnData = jdata["data"].ToString();
-                }
-                else
-                {
-                    returnData = string.Empty;
                 }
 
                 return returnData;

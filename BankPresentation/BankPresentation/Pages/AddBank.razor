@@ -1,7 +1,132 @@
 ﻿@page "/addbank"
 
+@if (!Loaded)
+{
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
+}
+else
+{
+    <h4>은행 추가</h4>
+
+    <div>
+        <span>이미 등록된 은행 리스트</span>
+        <div class="row same-row">
+            @foreach (var item in myBankList)
+            {
+                <div style="width:20%">
+                    @{
+                        var data = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                        if (data != null)
+                        {
+                            <span>@data.BANK_NAME</span>
+                        }
+                    }
+                </div>
+            }
+        </div>
+        <p />
+        <span>신규 은행 추가</span>
+        <div class="same-row">
+            <div style="width:95%">
+                <TelerikComboBox @bind-Value="@SelectedBank"
+                                 Data="@addBankList"
+                                 Placeholder="은행을 선택해 주세요"
+                                 TextField="@nameof(Bank.BANK_NAME)"
+                                 ValueField="@nameof(Bank.BANK_ID)">
+                    <ComboBoxSettings>
+                        <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                    </ComboBoxSettings>
+                </TelerikComboBox>
+            </div>
+            <div style="width:5%">
+                <TelerikButton OnClick="AddBankBtn"
+                               Size="@ThemeConstants.Button.Size.Medium">
+                    추가
+                </TelerikButton>
+            </div>
+        </div>
+    </div>
+}
 
 
 @code {
+    [CascadingParameter] public DialogFactory Dialogs { get; set; }
 
+    private string userId { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                navManager.NavigateTo("/Login", true);
+            }
+        }
+        catch
+        {
+
+        }
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<Bank> bankList { get; set; } = new();
+    private List<MyBankInfo> myBankList { get; set; } = new();
+    private List<Bank> addBankList { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            // string bankData = BankingService.GetBankList();
+            // if (!string.IsNullOrEmpty(bankData))
+            // {
+            //     bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            //     addBankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            // }
+
+            // string myBank = BankingService.GetMyBankList(userId);
+            // if (!string.IsNullOrEmpty(myBank))
+            // {
+            //     myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myBank);
+            // }
+
+            // if (bankList.Count() > 0 && myBankList.Count() > 0)
+            // {
+            //     foreach(var item in myBankList)
+            //     {
+            //         addBankList = addBankList.Where(x => !x.BANK_ID.Equals(item.BANK_ID)).ToList();
+            //     }
+            // }
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private string SelectedBank { get; set; }
+    private async Task AddBankBtn()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(SelectedBank))
+            {
+                await Dialogs.AlertAsync("추가하실 은행을 선택해 주세요.", "BankService");
+                return;
+            }
+
+            BankingService.AddMyBank(userId, SelectedBank);
+            LoadData();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
 }

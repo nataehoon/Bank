@@ -8,13 +8,6 @@ namespace BankApplication.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly BankPAPI _context;
-
-        public LoginController(BankPAPI context)
-        {
-            _context = context;
-        }
-
         [HttpPost]
         public async Task<ActionResult<SendAPI>> Login(Member logindata)
         {
