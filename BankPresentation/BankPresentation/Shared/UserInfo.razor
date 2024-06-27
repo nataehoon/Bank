@@ -1,0 +1,65 @@
+﻿
+@if(!Loaded){
+
+}
+else
+{
+    <TelerikDropDownButton FillMode="@(ThemeConstants.Button.FillMode.Flat)">
+        <DropDownButtonContent>
+            <img src="@CurrMember.IMG_URL" class="avata-image-sm" />
+            @CurrMember.NAME
+        </DropDownButtonContent>
+        <DropDownButtonItems>
+            @if (!string.IsNullOrEmpty(callPoint) && callPoint.Equals("header"))
+            {
+                <DropDownButtonItem Icon="SvgIcon.Logout" OnClick="LogOut">&nbsp; 로그아웃</DropDownButtonItem>
+            }
+        </DropDownButtonItems>
+        <DropDownButtonSettings>
+            <DropDownButtonPopupSettings Height=""></DropDownButtonPopupSettings>
+        </DropDownButtonSettings>
+    </TelerikDropDownButton>
+}
+
+@code {
+    [Parameter] public string userId { get; set; }
+    [Parameter] public string callPoint { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<Member> MemberList { get; set; } = new();
+    private Member CurrMember { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            Console.WriteLine("id : " + userId);
+            string memberData = AuthService.GetMemberList();
+            MemberList = JsonConvert.DeserializeObject<List<Member>>(memberData);
+            CurrMember = MemberList.FirstOrDefault(x => x.ID.Equals(userId));
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task LogOut()
+    {
+        try
+        {
+            await sessionStorage.ClearAsync();
+            navManager.NavigateTo("/Login", true);
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}

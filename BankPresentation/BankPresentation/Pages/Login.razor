@@ -36,11 +36,12 @@ else
                 </TelerikGridLayout>
             </CardBody>
             <CardActions Layout="@CardActionsLayout.Stretch">
-                <TelerikButton Title="사용자 로그인" Class="tooltip-target full-width-button"
+                <TelerikButton Title="사용자 로그인" Class="full-width"
+                               Icon="SvgIcon.Login"
                                FillMode="@(ThemeConstants.Button.FillMode.Solid)"
                                ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
                                OnClick="@EnterLogin">
-                    <img src="images/button/20/login.png" /> Login
+                    &nbsp; 로그인
                 </TelerikButton>
 @*                 <label class="text-center">
                     <TelerikCheckBox @bind-Value="@LoginIsChecked"></TelerikCheckBox>&nbsp; login Id 기억하기.
@@ -75,25 +76,32 @@ else
 
     private string Id { get; set; }
     private string Pw { get; set; }
-    private void EnterLogin()
+    private async Task EnterLogin()
     {
         try
         {
             if (string.IsNullOrEmpty(Id))
             {
-                Dialogs.AlertAsync("아이디를 입력해 주세요.");
+                await Dialogs.AlertAsync("아이디를 입력해 주세요.", "BankService");
+                return;
             }
             if (string.IsNullOrEmpty(Pw))
             {
-                Dialogs.AlertAsync("비밀번호를 입력해 주세요.");
+                await Dialogs.AlertAsync("비밀번호를 입력해 주세요.", "BankService");
+                return;
             }
 
             string login = AuthService.Login(Id, Pw);
 
             if (login.Equals("ok"))
             {
-                sessionStorage.SetItemAsync<string>("userId", Id);
+                await sessionStorage.SetItemAsync<string>("userId", Id);
                 navManager.NavigateTo("/main", true);
+            }
+            else
+            {
+                await Dialogs.AlertAsync("아이디와 비밀번호가 일치하지 않습니다.", "BankService");
+                return;
             }
         }
         catch (Exception ex)

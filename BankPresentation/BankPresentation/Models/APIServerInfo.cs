@@ -4,5 +4,6 @@
     {
         public string SERVERIP { get; set; }
         public string SERVERPORT { get; set; }
+        public string APINAME { get; set; }
     }
 }

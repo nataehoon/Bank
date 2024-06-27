@@ -9,13 +9,15 @@ namespace BankPresentation.Service
 {
     public class APIService
     {
-        public static string PostAPI(string apiName, string data, string serverInfo)
+        private static string serverip = "localhost";
+        private static string serverport = "7275";
+
+        private static string baseServerUrl = $"https://{serverip}:{serverport}/api/";
+        public static string PostAPI(string data, string apiname)
         {
             try
             {
-                APIServerInfo serverinfo = JsonConvert.DeserializeObject<APIServerInfo>(serverInfo);
-
-                string serverUrl = $"http://{serverinfo.SERVERIP}:{serverinfo.SERVERPORT}/api/{apiName}";
+                string serverUrl = baseServerUrl + apiname;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverUrl);
                 request.Method = "POST";

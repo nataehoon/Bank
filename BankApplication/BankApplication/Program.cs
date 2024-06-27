@@ -1,6 +1,9 @@
 global using Microsoft.EntityFrameworkCore.InMemory;
 global using BankApplication.Common;
 global using BankApplication.Models;
+global using BankApplication.Database;
+global using BankApplication.Controllers;
+global using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
