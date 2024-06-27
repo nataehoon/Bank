@@ -10,13 +10,6 @@ namespace BankApplication.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly BankPAPI _context;
-
-        public AuthController(BankPAPI context)
-        {
-            _context = context;
-        }
-
         [HttpPost]
         public async Task<ActionResult<SendAPI>> GetMemberList()
         {
@@ -26,7 +19,13 @@ namespace BankApplication.Controllers
                 DataTable dt = DBSet.Select(select);
                 string memberList = JsonConvert.SerializeObject(dt);
 
-                return SendMsg.APIMsg("ok", memberList);
+                string result = "fail";
+                if (!string.IsNullOrEmpty(memberList) && memberList.Equals("[]"))
+                {
+                    result = "ok";
+                }
+
+                return SendMsg.APIMsg(result, memberList);
             }
             catch (Exception ex)
             {

@@ -39,5 +39,20 @@ namespace BankApplication.Database
                 Logs.Exception(ex);
             }
         }
+
+        public static void DistributedTransacion(List<string> sqlList)
+        {
+            try
+            {
+                if (dbType.Equals("SQLite"))
+                {
+                    SQLite.DistributedTransacion(sqlList);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logs.Exception(ex);
+            }
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Data;
 using System.Data.SQLite;
+using System.Data.SqlTypes;
 using System.Reflection;
+using System.Transactions;
 
 namespace BankApplication.Database
 {
@@ -43,6 +45,39 @@ namespace BankApplication.Database
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
+            {
+                Logs.Exception(ex);
+            }
+        }
+
+        public static void DistributedTransacion(List<string> sqlList)
+        {
+            try
+            {
+                SQLiteConnection conn = new SQLiteConnection(connstring);
+                conn.Open();
+
+                SQLiteTransaction transaction = conn.BeginTransaction();
+                try
+                {
+                    SQLiteCommand cmd = conn.CreateCommand();
+                    cmd.Transaction = transaction;
+
+                    foreach(var item in sqlList)
+                    {
+                        cmd.CommandText = item;
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logs.Exception(ex);
+                    transaction.Rollback();
+                }
+            }
+            catch(Exception ex)
             {
                 Logs.Exception(ex);
             }
