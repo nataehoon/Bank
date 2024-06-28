@@ -1,6 +1,6 @@
-﻿namespace BankApplication.Models
+﻿namespace BankPresentation.Models
 {
-    public class AssetManagement
+    public class MyAsset
     {
         public string ASSET_ID { get; set; }
         public string USER_ID { get; set; }

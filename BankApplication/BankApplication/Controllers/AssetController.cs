@@ -33,7 +33,36 @@ namespace BankApplication.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult<SendAPI>> UpdateAsset(SendAsset asset) // 송금
+        public async Task<ActionResult<SendAPI>> AddAsset(Asset asset) // 송금
+        {
+            try
+            {
+                string select = $"SELECT * FROM ASSETMANAGEMENT WHERE USER_ID='{asset.USER_ID}' AND BANK_ID='{asset.BANK_ID}'";
+                DataTable dt = DBSet.Select(select);
+                string data = JsonConvert.SerializeObject(dt);
+
+                string result = "fail";
+                if(!string.IsNullOrEmpty(data) && !data.Equals("[]") && !data.Equals("null"))
+                {
+                    AssetManagement assetinfo = JsonConvert.DeserializeObject<List<AssetManagement>>(data)[0];
+
+                    string myasset = (Convert.ToInt32(assetinfo.ASSET) + Convert.ToInt32(asset.ASSET)).ToString();
+                    string insert = $"UPDATE ASSETMANAGEMENT SET ASSET='{myasset}' WHERE USER_ID='{asset.USER_ID}' AND BANK_ID='{asset.BANK_ID}'";
+                    DBSet.NonSql(insert);
+
+                    result = "ok";
+                }
+                return SendMsg.APIMsg(result, "");
+            }
+            catch (Exception ex)
+            {
+                Logs.Exception(ex);
+                return SendMsg.APIMsg("error", "");
+            }
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult<SendAPI>> UpdateAsset(SendAsset asset) // 이체
         {
             try
             {
@@ -42,7 +71,7 @@ namespace BankApplication.Controllers
                 string selectdata = JsonConvert.SerializeObject(dt);
 
                 string result = "fail";
-                if (!string.IsNullOrEmpty(selectdata) && !selectdata.Equals("[]"))
+                if (!string.IsNullOrEmpty(selectdata) && !selectdata.Equals("[]") && !selectdata.Equals("null"))
                 {
                     List<AssetManagement> memBankLink = JsonConvert.DeserializeObject<List<AssetManagement>>(selectdata);
 

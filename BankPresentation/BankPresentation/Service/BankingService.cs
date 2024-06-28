@@ -174,5 +174,29 @@ namespace BankPresentation.Service
                 return null;
             }
         }
+
+        public static string AddAsset(string userId, string bankId, int asset)
+        {
+            try
+            {
+                string data = "{\"USER_ID\":\"" + userId + "\", \"BANK_ID\":\"" + bankId + "\", \"ASSET\":\"" + asset + "\"}";
+
+                string result = APIService.API(data, "AddAsset", "PATCH");
+
+                string apidata = string.Empty;
+                JObject jdata = JObject.Parse(result);
+                if (jdata.ContainsKey("result") && jdata["result"].ToString().Equals("ok"))
+                {
+                    apidata = jdata["result"].ToString();
+                }
+
+                return apidata;
+            }
+            catch (Exception ex)
+            {
+                Logs.Exception(ex);
+                return null;
+            }
+        }
     }
 }

@@ -1,0 +1,187 @@
+﻿
+@if (!Loaded)
+{
+    
+}
+else
+{
+    <div class="same-row">
+        <div class="input-title">
+            유저 명
+        </div>
+        <div class="input-content">
+            <TelerikComboBox Data="memberList"
+                             Value="@user"
+                             ValueChanged="@((string newValue) => SelecteUser(newValue))"
+                             TextField="@nameof(Member.NAME)"
+                             ValueField="@nameof(Member.ID)"
+                             Placeholder="송금할 유저를 선택해 주세요.">
+                <ComboBoxSettings>
+                    <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                </ComboBoxSettings>
+            </TelerikComboBox>
+        </div>
+    </div>
+    <div class="same-row">
+        <div class="input-title">
+            은행 명
+        </div>
+        <div class="input-content">
+            <TelerikComboBox Data="myBankList"
+                             @bind-Value="@bank"
+                             TextField="@nameof(Bank.BANK_NAME)"
+                             ValueField="@nameof(Bank.BANK_ID)"
+                             Placeholder="송금할 은행을 선택해 주세요.">
+                <ComboBoxSettings>
+                    <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                </ComboBoxSettings>
+            </TelerikComboBox>
+        </div>
+    </div>
+    <div class="same-row">
+        <div class="input-title">
+            입금 금액
+        </div>
+        <div class="input-content">
+            <TelerikNumericTextBox @bind-Value="@asset"></TelerikNumericTextBox>
+        </div>
+    </div>
+    <div class="btn-right">
+        <TelerikButton OnClick="Send"
+                        Size="@ThemeConstants.Button.Size.Medium"
+                        ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
+                        송금
+        </TelerikButton>
+    </div>
+    
+}
+
+@code{
+    [CascadingParameter] public DialogFactory Dialogs { get; set; }
+
+    private string userId { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+        }
+        catch
+        {
+
+        }
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<Member> memberList { get; set; } = new();
+    private List<Bank> bankList { get; set; } = new();
+    private List<MyAsset> assetList { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            string memberdata = AuthService.GetMemberList();
+            if (!string.IsNullOrEmpty(memberdata))
+            {
+                memberList = JsonConvert.DeserializeObject<List<Member>>(memberdata);
+            }
+
+            string bankdata = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankdata))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankdata);
+            }
+
+            string assetdata = BankingService.GetMyAssetList();
+            if (!string.IsNullOrEmpty(assetdata))
+            {
+                assetList = JsonConvert.DeserializeObject<List<MyAsset>>(assetdata);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private List<Bank> myBankList { get; set; } = new();
+    private async Task SelecteUser(string value)
+    {
+        try
+        {
+            user = value;
+            var myAssetList = assetList.Where(x => x.USER_ID.Equals(user)).ToList();
+            myBankList = new();
+            foreach(var item in myAssetList)
+            {
+                Bank banks = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                myBankList.Add(banks);
+            }
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private string user { get; set; }
+    private string bank { get; set; }
+    private int asset { get; set; } = 0;
+    private async Task Send()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(user))
+            {
+                await Dialogs.AlertAsync("송금할 유저를 선택해 주세요.", "Bank Service");
+                return;
+            }
+            if (string.IsNullOrEmpty(bank))
+            {
+                await Dialogs.AlertAsync("송금할 은행을 선택해 주세요.", "Bank Service");
+                return;
+            }
+            if (asset <= 0)
+            {
+                await Dialogs.AlertAsync("송금할 금액을 입력해 주세요", "Bank Service");
+                return;
+            }
+
+            string api = BankingService.AddAsset(user, bank, asset);
+            if (api.Equals("ok"))
+            {
+                await Dialogs.AlertAsync("송금이 완료되었습니다.", "Bank Service");
+            }
+            else
+            {
+                await Dialogs.AlertAsync("송금이 실패하였습니다.", "Bank Service");
+                return;
+            }
+
+            ClearItem();
+            await LoadData();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private void ClearItem()
+    {
+        try
+        {
+            user = string.Empty;
+            bank = string.Empty;
+            asset = 0;
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}

@@ -165,3 +165,28 @@ a, .btn-link {
     font-size : 10px;
     color:lightgray;
 }
+
+.layout-body{
+    margin-top: 2%;
+}
+
+.input-title{
+    width : 10%;
+}
+
+.input-content{
+    width : 90%;
+}
+
+.input-content-btn {
+    width: 80%;
+}
+
+.input-btn{
+    width : 10%;
+}
+
+.gap-sm{
+    margin-bottom:3%;
+    width:50%;
+}

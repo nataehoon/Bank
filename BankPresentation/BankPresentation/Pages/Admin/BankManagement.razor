@@ -8,14 +8,14 @@
 else
 {
     <div>
-        <div class="same-row">
-            <div style="width:10%">
+        <div class="same-row gap-sm">
+            <div class="input-title">
                 은행명
             </div>
-            <div style="width:80%">
+            <div class="input-content-btn">
                 <TelerikTextBox @bind-Value="@bankName" Placeholder="은행명을 입력하세요."></TelerikTextBox>
             </div>
-            <div class="btn-right" style="width:10%">
+            <div class="btn-right input-btn">
                 <TelerikButton OnClick="AddBankSave"
                                 Size="@ThemeConstants.Button.Size.Medium"
                                 ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
@@ -39,8 +39,8 @@ else
                 <GridExcelExport FileName="@ExcelFileName" AllPages="@ExportAllPages" OnBeforeExport="@OnBeforeExcelExport" />
             </GridExport>
             <GridColumns>
-                <GridColumn Field="@nameof(Bank.BANK_NAME)" Title="은행명"></GridColumn> 
-                <GridColumn>
+                <GridColumn Field="@nameof(Bank.BANK_NAME)" Title="은행명" Width="93%"></GridColumn> 
+                <GridColumn Width="7%">
                     <Template>
                         @{
                             var data = context as Bank;
