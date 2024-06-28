@@ -18,9 +18,9 @@ namespace BankApplication.Controllers
                 string select = "SELECT * FROM MEMBERS";
                 DataTable dt = DBSet.Select(select);
                 string memberList = JsonConvert.SerializeObject(dt);
-
+                
                 string result = "fail";
-                if (!string.IsNullOrEmpty(memberList) && memberList.Equals("[]"))
+                if (!string.IsNullOrEmpty(memberList) && !memberList.Equals("[]"))
                 {
                     result = "ok";
                 }
@@ -39,7 +39,7 @@ namespace BankApplication.Controllers
         {
             try
             {
-                string insert = $"INSERT INTO MEMBERS(ID, NAME, PW, EMAIL, IMG_URL) VALUES('{member.ID}', '{member.NAME}', '{member.PW}', '{member.EMAIL}', '{member.IMG_URL}')";
+                string insert = $"INSERT INTO MEMBERS(ID, NAME, PW, EMAIL, IMG_URL, LEVEL) VALUES('{member.ID}', '{member.NAME}', '{member.PW}', '{member.EMAIL}', '{member.IMG_URL}', '{member.LEVEL}')";
                 DBSet.NonSql(insert);
 
                 return SendMsg.APIMsg("ok", "");

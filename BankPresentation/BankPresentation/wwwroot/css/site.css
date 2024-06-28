@@ -63,6 +63,57 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
+.post-likes-count {
+    font-size: 13px;
+    align-self: center;
+    color: #656565;
+}
+
+.image-height {
+    height: 170px;
+}
+
+.comment-text {
+    font-size: 13px;
+    font-weight: bold;
+    max-width: 100px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.comment-data {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+    .comment-data span {
+        margin-left: 8px;
+    }
+
+.avatar-size {
+    width: 35px !important;
+    height: 35px !important;
+    flex-basis: 35px !important;
+}
+
+.mb-xs {
+    margin-bottom: 8px;
+}
+
+.align-end {
+    text-align: end;
+}
+
+.justify-space-between {
+    justify-content: space-between;
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .center {
     position: fixed;
     top: 50%;
@@ -79,4 +130,38 @@ a, .btn-link {
     display: flex;
     justify-content: left;
     flex-wrap: wrap;
+}
+
+.btn-right {
+    text-align: right;
+    display: block;
+}
+
+
+.card-center {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardlist {
+    width: calc(100% / 3 - 0.6);
+    margin: 2%;
+}
+
+.avata-image-sm {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.container{
+    max-width:1100px;
+}
+
+.guide{
+    font-size : 10px;
+    color:lightgray;
 }

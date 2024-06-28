@@ -1,7 +1,156 @@
 ﻿@page "/checkbalance"
 
-<h3>Checkbalance</h3>
+<div class="k-card-deck" style="flex-wrap:wrap">
+    @foreach(var item in myBankList)
+    {
+        <div class="cardlist">
+            <TelerikCard Width="300px">
+                <CardHeader>
+                    <CardTitle>
+                        <div class="flexbox">
+                            <div class="card-center">
+                                @{
+                                    var bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                                    @bank.BANK_NAME
+                                }
+                            </div>
+                        </div>
+                    </CardTitle>
+                </CardHeader>
+                <CardBody>
+                    <div class="flexbox">
+                        <div class="card-center" style="height:100px;">
+                            @(Convert.ToInt32(item.Asset).ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"))) 원
+                        </div>
+                    </div>
+                </CardBody>
+                <CardSeparator></CardSeparator>
+                <CardActions>
+                    <div class="btn-right" style="width:100%">
+                        <TelerikButton OnClick="@(() => Refresh(item))"
+                                       Size="@ThemeConstants.Button.Size.Medium"
+                                       FillMode="@ThemeConstants.Button.FillMode.Flat"
+                                       ThemeColor="@ThemeConstants.Button.ThemeColor.Success">
+                                   이체
+                            </TelerikButton>
+                    </div>
+                </CardActions>
+            </TelerikCard>
+        </div>
+    }
+</div>
+
+<TelerikWindow @bind-Visible="@sendWindow"
+               Width="600px"
+               ThemeColor="@ThemeConstants.Window.ThemeColor.Dark">
+    <WindowActions>
+        <WindowAction Name="Minimize"></WindowAction>
+        <WindowAction Name="Maximize"></WindowAction>
+        <WindowAction Name="Close"></WindowAction>
+    </WindowActions>
+    <WindowTitle>
+        <span>계좌 이체</span>
+    </WindowTitle>
+    <WindowContent>
+        <Wire bankid="@selectedbankId" CallBackData="@CallBackData"></Wire>
+    </WindowContent>
+</TelerikWindow>
+
 
 @code {
 
+    private string userId { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+        }
+        catch
+        {
+
+        }
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<MyBankInfo> myBankList { get; set; } = new();
+    private List<Bank> bankList { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            string mybankData = BankingService.GetMyBankList(userId);
+            if (!string.IsNullOrEmpty(mybankData))
+            {
+                myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(mybankData);
+            }
+
+            string bankData = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankData))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            }
+
+            await MyAsset();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private List<MyBankInfo> myAssetList { get; set; } = new();
+    private async Task MyAsset()
+    {
+        try
+        {
+            string myassetdata = BankingService.GetMyAssetList();
+            if (!string.IsNullOrEmpty(myassetdata))
+            {
+                myAssetList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myassetdata);
+                foreach (var item in myBankList)
+                {
+                    var eqdata = myAssetList.FirstOrDefault(x => x.USER_ID.Equals(item.USER_ID) && x.BANK_ID.Equals(item.BANK_ID));
+                    item.Asset = eqdata == null ? "0" : eqdata.Asset;
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private bool sendWindow { get; set; }
+    private string selectedbankId { get; set; }
+    private async Task Refresh(MyBankInfo data)
+    {
+        try
+        {
+            selectedbankId = data.BANK_ID;
+            sendWindow = !sendWindow;
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task CallBackData()
+    {
+        try
+        {
+            sendWindow = !sendWindow;
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
 }

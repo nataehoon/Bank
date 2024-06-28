@@ -15,7 +15,7 @@ else
         <div class="row same-row">
             @foreach (var item in myBankList)
             {
-                <div style="width:20%">
+                <div class="same-row" style="width:20%">
                     @{
                         var data = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
                         if (data != null)
@@ -23,6 +23,13 @@ else
                             <span>@data.BANK_NAME</span>
                         }
                     }
+                    <div>
+                        <TelerikButton OnClick="@(() => RemoveBank(data))"
+                                        Size="@ThemeConstants.Button.Size.Small"
+                                        FillMode="@ThemeConstants.Button.FillMode.Flat"
+                                        ThemeColor="@ThemeConstants.Button.ThemeColor.Error"
+                                        Icon="@SvgIcon.X"></TelerikButton>
+                    </div>
                 </div>
             }
         </div>
@@ -83,26 +90,26 @@ else
     {
         try
         {
-            // string bankData = BankingService.GetBankList();
-            // if (!string.IsNullOrEmpty(bankData))
-            // {
-            //     bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
-            //     addBankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
-            // }
+            string bankData = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankData))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+                addBankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            }
 
-            // string myBank = BankingService.GetMyBankList(userId);
-            // if (!string.IsNullOrEmpty(myBank))
-            // {
-            //     myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myBank);
-            // }
+            string myBank = BankingService.GetMyBankList(userId);
+            if (!string.IsNullOrEmpty(myBank))
+            {
+                myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myBank);
+            }
 
-            // if (bankList.Count() > 0 && myBankList.Count() > 0)
-            // {
-            //     foreach(var item in myBankList)
-            //     {
-            //         addBankList = addBankList.Where(x => !x.BANK_ID.Equals(item.BANK_ID)).ToList();
-            //     }
-            // }
+            if (bankList != null && myBankList.Count() != null)
+            {
+                foreach(var item in myBankList)
+                {
+                    addBankList = addBankList.Where(x => !x.BANK_ID.Equals(item.BANK_ID)).ToList();
+                }
+            }
         }
         catch(Exception ex)
         {
@@ -122,6 +129,34 @@ else
             }
 
             BankingService.AddMyBank(userId, SelectedBank);
+            LoadData();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task RemoveBank(Bank data)
+    {
+        try
+        {
+            bool confirmed = await Dialogs.ConfirmAsync("등록된 은행을 삭제 하시겠습니까?", "BankService");
+            if (!confirmed)
+            {
+                return;
+            }
+
+            string result = BankingService.RemoveMyBank(userId, data.BANK_ID);
+            if (!string.IsNullOrEmpty(result))
+            {
+                await Dialogs.AlertAsync("삭제 되었습니다.", "BankService");
+            }
+            else
+            {
+                await Dialogs.AlertAsync("실패 하였습니다. 잠시 후 다시 시도해 주세요.", "BankService");
+            }
+
             LoadData();
         }
         catch(Exception ex)

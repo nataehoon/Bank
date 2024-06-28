@@ -1,7 +1,302 @@
 ﻿@page "/wire"
 
-<h3>Wire</h3>
+@if (!Loaded)
+{
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
+}
+else
+{
+    <div>
+        <div>
+            <div>
+                <div>
+                    보내는 사람
+                </div>
+                <div>
+                    <TelerikTextBox @bind-Value="@fromUser" ReadOnly="true"></TelerikTextBox>
+                </div>
+            </div>
+            <div>
+                은행 선택
+            </div>
+            <div>
+                <TelerikComboBox Data="myBankList"
+                                 Value="@fromBank"
+                                 ReadOnly="@(string.IsNullOrEmpty(bankid) == true ? false:true)"
+                                 TextField="@nameof(Bank.BANK_NAME)"
+                                 ValueField="@nameof(Bank.BANK_ID)"
+                                 Placeholder="은행을 선택해 주세요."
+                                 ValueChanged="@((string newValue) => ChangedBank(newValue))">
+                    <ComboBoxSettings>
+                        <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                    </ComboBoxSettings>
+                </TelerikComboBox>
+                @if(!string.IsNullOrEmpty(fromBank)){
+                    <div>
+                        <span>(잔액 : @balance 원)</span>
+                    </div>
+                }
+            </div>
+        </div>
+        <hr />
+        <div>
+            <div>
+                받는 사람 사람
+            </div>
+            <div>
+                <TelerikComboBox Data="memberList"
+                                 Value="@toUser"
+                                 TextField="@nameof(Member.NAME)"
+                                 ValueField="@nameof(Member.ID)"
+                                 Placeholder="받으실 분을 선택해 주세요."
+                                 ValueChanged="@((string newValue) => ChangedToUser(newValue))">
+                    <ComboBoxSettings>
+                        <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                    </ComboBoxSettings>
+                </TelerikComboBox>
+            </div>
+            <div>
+                은행 선택
+            </div>
+            <div>
+                <TelerikComboBox Data="SelectedUserLinkBank"
+                                 @bind-Value="toBank"
+                                 TextField="@nameof(Bank.BANK_NAME)"
+                                 ValueField="@nameof(Bank.BANK_ID)"
+                                 Placeholder="은행을 선택해 주세요.">
+                    <ComboBoxSettings>
+                        <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                    </ComboBoxSettings>
+                </TelerikComboBox>
+            </div>
+        </div>
+        <div>
+            <div>
+                보내실 금액 <span class="guide">(단위 : 원)</span>
+            </div>
+            <div>
+                <TelerikNumericTextBox @bind-Value="@Asset"></TelerikNumericTextBox>
+            </div>
+        </div>
+        <div class="btn-right">
+            <TelerikButton OnClick="Send"
+                            Size="@ThemeConstants.Button.Size.Medium"
+                            ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
+                        송금
+            </TelerikButton>
+        </div>
+    </div>
+}
 
 @code {
+    [CascadingParameter] public DialogFactory Dialogs { get; set; }
+    [Parameter] public string bankid { get; set; }
+    [Parameter] public EventCallback CallBackData { get; set; }
 
+    private string userId { get; set; }
+
+    private bool Loaded { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await sessionStorage.GetItemAsync<string>("userId");
+        }
+        catch
+        {
+
+        }
+
+        await LoadData();
+
+        Loaded = true;
+    }
+
+    private List<Member> memberList { get; set; } = new();
+    private List<Bank> myBankList { get; set; } = new();
+    private List<Bank> bankList { get; set; } = new();
+    private List<MyBankInfo> myAssetInfo { get; set; } = new();
+    private async Task LoadData()
+    {
+        try
+        {
+            string memberData = AuthService.GetMemberList();
+            if (!string.IsNullOrEmpty(memberData))
+            {
+                var memberinfo = JsonConvert.DeserializeObject<List<Member>>(memberData);
+                fromUser = memberinfo.FirstOrDefault(x => x.ID.Equals(userId)) == null ? null:memberinfo.FirstOrDefault(x => x.ID.Equals(userId)).NAME;
+                memberList = memberinfo.Where(x => !x.ID.Equals(userId)).ToList();
+            }
+
+            string bankdata = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankdata))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankdata);
+            }
+
+            string mybankdata = BankingService.GetMyBankList(userId);
+            if (!string.IsNullOrEmpty(mybankdata))
+            {
+                myBankList = new();
+                var myBankInfo = JsonConvert.DeserializeObject<List<MyBankInfo>>(mybankdata);
+                foreach (var item in myBankInfo)
+                {
+                    Bank bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                    myBankList.Add(bank);
+                }
+            }
+
+            string myassetdata = BankingService.GetMyAssetList();
+            if (!string.IsNullOrEmpty(myassetdata))
+            {
+                myAssetInfo = JsonConvert.DeserializeObject<List<MyBankInfo>>(myassetdata);
+            }
+
+            if(!string.IsNullOrEmpty(bankid))
+            {
+                fromBank = bankid;
+                balanceinfo = myAssetInfo.FirstOrDefault(x => x.BANK_ID.Equals(fromBank) && x.USER_ID.Equals(userId));
+                balance = Convert.ToInt32(balanceinfo.Asset).ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"));
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private string balance { get; set; }
+    private MyBankInfo balanceinfo { get; set; } = new();
+    private async Task ChangedBank(string value)
+    {
+        try
+        {
+            fromBank = value;
+            balanceinfo = myAssetInfo.FirstOrDefault(x => x.BANK_ID.Equals(fromBank) && x.USER_ID.Equals(userId));
+            balance = Convert.ToInt32(balanceinfo.Asset).ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"));
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private List<Bank> SelectedUserLinkBank { get; set; }
+    private async Task ChangedToUser(string value)
+    {
+        try
+        {
+            toUser = value;
+            var SelectedUserAsset = myAssetInfo.Where(x => x.USER_ID.Equals(toUser)).ToList();
+            SelectedUserLinkBank = new();
+            foreach(var item in SelectedUserAsset)
+            {
+                Bank bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                SelectedUserLinkBank.Add(bank);
+            }
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private string fromUser { get; set; }
+    private string fromBank { get; set; }
+    private string toUser { get; set; }
+    private string toBank { get; set; }
+    private int Asset { get; set; }
+    private int charge { get; set; } = 0;
+    private bool hasCharge { get; set; } = false;
+    private async Task Send()
+    {
+        try
+        {
+            hasCharge = false;
+            if (string.IsNullOrEmpty(fromBank))
+            {
+                await Dialogs.AlertAsync("보내는 사람의 은행을 선택해 주세요.", "BankService");
+                return;
+            }
+            if (string.IsNullOrEmpty(toUser))
+            {
+                await Dialogs.AlertAsync("받으실 분을 선택해 주세요.", "BankService");
+                return;
+            }
+            if (string.IsNullOrEmpty(toBank))
+            {
+                await Dialogs.AlertAsync("받으실 분의 은행을 선택해 주세요", "BankService");
+                return;
+            }
+            if(Asset <= 0)
+            {
+                await Dialogs.AlertAsync("보내실 금액을 입력해 주세요.", "BankService");
+                return;
+            }
+            if (!fromBank.Equals(toBank)) // 수수료 발생
+            {
+                hasCharge = true;
+                charge = 700;
+            }
+            if (Convert.ToInt32(balanceinfo.Asset) < Asset + (hasCharge == true ? charge:0))
+            {
+                await Dialogs.AlertAsync($"{Asset + (hasCharge == true ? charge : 0)}잔액이 부족합니다.", "BankService");
+                return;
+            }
+
+            string toname = memberList.FirstOrDefault(x => x.ID.Equals(toUser)).NAME;
+            string tobank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(toBank)).BANK_NAME;
+            string confirmMsg = $"{toname}님의 {tobank}으로 송금 하시겠습니까? \r\n 금액 : {Asset.ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"))}원";
+            if(hasCharge)
+            {
+                confirmMsg += $"\r\n 수수료 : {charge}원";
+            }
+            bool confirmed = await Dialogs.ConfirmAsync(confirmMsg, "BankService");
+            if (!confirmed)
+                return;
+
+            string api = BankingService.SendAsset(fromUser, fromBank, toUser, toBank, Asset, charge);
+            if (api.Equals("ok"))
+            {
+                await Dialogs.AlertAsync("송금이 완료되었습니다.", "BankService");
+            }
+            else
+            {
+                await Dialogs.AlertAsync("송금이 실패하였습니다. 잠시후 다시 시도해 주세요.", "BankService");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(bankid))
+            {
+                await CallBackData.InvokeAsync();
+            }
+
+            ClearData();
+            await LoadData();
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private void ClearData()
+    {
+        try
+        {
+            fromUser = string.Empty;
+            fromBank = string.Empty;
+            toUser = string.Empty;
+            toBank = string.Empty;
+            Asset = 0;
+            charge = 0;
+            hasCharge = false;
+        }   
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
 }

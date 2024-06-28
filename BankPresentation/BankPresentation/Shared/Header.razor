@@ -10,7 +10,7 @@ else
     <TelerikAppBar ThemeColor="@ThemeConstants.AppBar.ThemeColor.Primary">
         
         <AppBarSection>
-            <a href="/main"><span class="header-title">Bank Service</span></a>
+            <a href="/main"><span class="header-title"><img src="/images/default/Logo.png" /></span></a>
         </AppBarSection>
 
         <AppBarSpacer />
@@ -18,8 +18,9 @@ else
         {
             <AppBarSection>
                 <TelerikButton OnClick="Config"
-                                 Size="@ThemeConstants.Button.Size.Large">
-                    <img src="css/open-iconic//font/fonts/open-iconic.svg" />
+                                Size="@ThemeConstants.Button.Size.Large"
+                                FillMode="@(ThemeConstants.Button.FillMode.Flat)">
+                    <img src="images/button/20/gear-filled.png" />
                 </TelerikButton>
             </AppBarSection>
 

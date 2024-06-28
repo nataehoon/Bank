@@ -13,14 +13,14 @@ namespace BankPresentation.Service
         private static string serverport = "7275";
 
         private static string baseServerUrl = $"https://{serverip}:{serverport}/api/";
-        public static string PostAPI(string data, string apiname)
+        public static string API(string data, string apiname, string method)
         {
             try
             {
                 string serverUrl = baseServerUrl + apiname;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(serverUrl);
-                request.Method = "POST";
+                request.Method = method;
                 request.ContentType = "application/json";
                 request.Timeout = 30 * 1000;
 
@@ -52,6 +52,5 @@ namespace BankPresentation.Service
                 return null;
             }
         }
-
     }
 }
