@@ -10,7 +10,7 @@ namespace BankApplication.Controllers
     public class MyBankController : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult<SendAPI>> GetMyBankList(MemBankLink mbl)
+        public async Task<ActionResult<SendAPI>> GetMyBankList(GetMyBank mbl)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<SendAPI>> AddMyBank(MemBankLink mbl)
+        public async Task<ActionResult<SendAPI>> AddMyBank(BankLink mbl)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<SendAPI>> RemoveMyBank(MemBankLink mbl)
+        public async Task<ActionResult<SendAPI>> RemoveMyBank(BankLink mbl)
         {
             try
             {

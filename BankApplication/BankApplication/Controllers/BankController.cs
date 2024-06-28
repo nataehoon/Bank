@@ -67,7 +67,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<SendAPI>> RemoveBank(Bank bank)
+        public async Task<ActionResult<SendAPI>> RemoveBank(DeleteBank bank)
         {
             try
             {

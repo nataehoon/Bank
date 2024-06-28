@@ -56,7 +56,7 @@ namespace BankApplication.Controllers
         {
             try
             {
-                string update = $"UPDATE MEMBERS SET NAME='{member.NAME}', PW='{member.PW}', EMAIL='{member.EMAIL}', IMG_URL='{member.IMG_URL}' WHERE ID='{member.ID}'";
+                string update = $"UPDATE MEMBERS SET NAME='{member.NAME}', PW='{member.PW}', EMAIL='{member.EMAIL}', IMG_URL='{member.IMG_URL}', LEVEL='{member.LEVEL}' WHERE ID='{member.ID}'";
                 DBSet.NonSql(update);
 
                 return SendMsg.APIMsg("ok", "");
@@ -69,7 +69,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<SendAPI>> DeleteMember(Member member)
+        public async Task<ActionResult<SendAPI>> DeleteMember(DeleteMember member)
         {
             try
             {
