@@ -1,44 +1,56 @@
 ﻿@page "/checkbalance"
 
-<div class="k-card-deck" style="flex-wrap:wrap">
-    @foreach(var item in myBankList)
-    {
-        <div class="cardlist">
-            <TelerikCard Width="300px">
-                <CardHeader>
-                    <CardTitle>
+@if (!Loaded)
+{
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
+}
+else
+{
+    <h4>계좌 조회</h4>
+    <hr />
+    <div class="k-card-deck" style="flex-wrap:wrap">
+        @foreach (var item in myBankList)
+        {
+            <div class="cardlist">
+                <TelerikCard Width="300px">
+                    <CardHeader>
+                        <CardTitle>
+                            <div class="flexbox">
+                                <div class="card-center">
+                                    @{
+                                        var bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                                        @bank.BANK_NAME
+                                    }
+                                </div>
+                            </div>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardBody>
                         <div class="flexbox">
-                            <div class="card-center">
-                                @{
-                                    var bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
-                                    @bank.BANK_NAME
-                                }
+                            <div class="card-center" style="height:100px;">
+                                @(Convert.ToInt32(item.Asset).ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"))) 원
                             </div>
                         </div>
-                    </CardTitle>
-                </CardHeader>
-                <CardBody>
-                    <div class="flexbox">
-                        <div class="card-center" style="height:100px;">
-                            @(Convert.ToInt32(item.Asset).ToString("C", CultureInfo.CreateSpecificCulture("ko-KR"))) 원
-                        </div>
-                    </div>
-                </CardBody>
-                <CardSeparator></CardSeparator>
-                <CardActions>
-                    <div class="btn-right" style="width:100%">
-                        <TelerikButton OnClick="@(() => Refresh(item))"
-                                       Size="@ThemeConstants.Button.Size.Medium"
-                                       FillMode="@ThemeConstants.Button.FillMode.Flat"
-                                       ThemeColor="@ThemeConstants.Button.ThemeColor.Success">
-                                   이체
+                    </CardBody>
+                    <CardSeparator></CardSeparator>
+                    <CardActions>
+                        <div class="btn-right" style="width:100%">
+                            <TelerikButton OnClick="@(() => Refresh(item))"
+                                           Size="@ThemeConstants.Button.Size.Medium"
+                                           FillMode="@ThemeConstants.Button.FillMode.Flat"
+                                           ThemeColor="@ThemeConstants.Button.ThemeColor.Success">
+                                이체
                             </TelerikButton>
-                    </div>
-                </CardActions>
-            </TelerikCard>
-        </div>
-    }
-</div>
+                        </div>
+                    </CardActions>
+                </TelerikCard>
+            </div>
+        }
+    </div>
+}
+
 
 <TelerikWindow @bind-Visible="@sendWindow"
                Width="600px"
@@ -145,6 +157,7 @@
     {
         try
         {
+            Console.WriteLine("aa");
             sendWindow = !sendWindow;
             await LoadData();
         }

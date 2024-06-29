@@ -8,6 +8,8 @@
 }
 else
 {
+    <h4>계좌 이체</h4>
+    <hr />
     <div>
         <div>
             <div>
@@ -80,7 +82,7 @@ else
                 <TelerikNumericTextBox @bind-Value="@Asset"></TelerikNumericTextBox>
             </div>
         </div>
-        <div class="btn-right">
+        <div class="btn-right btn-margin-top">
             <TelerikButton OnClick="Send"
                             Size="@ThemeConstants.Button.Size.Medium"
                             ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
@@ -122,12 +124,12 @@ else
     {
         try
         {
+            Console.WriteLine(bankid);
             string memberData = AuthService.GetMemberList();
             if (!string.IsNullOrEmpty(memberData))
             {
-                var memberinfo = JsonConvert.DeserializeObject<List<Member>>(memberData);
-                fromUser = memberinfo.FirstOrDefault(x => x.ID.Equals(userId)) == null ? null:memberinfo.FirstOrDefault(x => x.ID.Equals(userId)).NAME;
-                memberList = memberinfo.Where(x => !x.ID.Equals(userId)).ToList();
+                memberList = JsonConvert.DeserializeObject<List<Member>>(memberData);
+                fromUser = memberList.FirstOrDefault(x => x.ID.Equals(userId)) == null ? null : memberList.FirstOrDefault(x => x.ID.Equals(userId)).NAME;
             }
 
             string bankdata = BankingService.GetBankList();
@@ -196,6 +198,10 @@ else
                 Bank bank = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
                 SelectedUserLinkBank.Add(bank);
             }
+            if (fromUser.Equals(toUser))
+            {
+                SelectedUserLinkBank = SelectedUserLinkBank.Where(x => !x.BANK_ID.Equals(fromBank)).ToList();
+            }
         }
         catch(Exception ex)
         {
@@ -258,18 +264,10 @@ else
                 return;
 
             string api = BankingService.SendAsset(fromUser, fromBank, toUser, toBank, Asset, charge);
-            if (api.Equals("ok"))
-            {
-                await Dialogs.AlertAsync("송금이 완료되었습니다.", "BankService");
-            }
-            else
-            {
-                await Dialogs.AlertAsync("송금이 실패하였습니다. 잠시후 다시 시도해 주세요.", "BankService");
-                return;
-            }
 
             if (!string.IsNullOrEmpty(bankid))
             {
+                
                 await CallBackData.InvokeAsync();
             }
 

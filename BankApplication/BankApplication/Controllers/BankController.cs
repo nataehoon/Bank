@@ -33,7 +33,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<SendAPI>> AddBank(Bank bank)
+        public async Task<ActionResult<SendAPI>> AddBank(AddBank bank)
         {
             try
             {

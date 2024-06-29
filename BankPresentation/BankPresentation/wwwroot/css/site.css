@@ -190,3 +190,27 @@ a, .btn-link {
     margin-bottom:3%;
     width:50%;
 }
+
+.linkbanklist{
+    width:60%;
+}
+
+.addbanklist{
+    width:40%;
+}
+
+.addbanktitle{
+    margin-bottom:2%;
+}
+
+.addtitle{
+    font: 900 18px italic;
+}
+
+.btn-margin-top{
+    margin-top:1%;
+}
+
+.margin-bottom{
+    margin-bottom:1%;
+}

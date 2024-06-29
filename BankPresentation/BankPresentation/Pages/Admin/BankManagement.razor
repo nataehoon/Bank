@@ -108,6 +108,7 @@ else
             if (apidata.Equals("ok"))
             {
                 await Dialogs.AlertAsync("성공적으로 저장되었습니다.", "BankService");
+                bankName = string.Empty;
             }
             else
             {

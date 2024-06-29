@@ -1,11 +1,13 @@
 ﻿
 @if (!Loaded)
 {
-    
+    <div class="my-mockup-layout">
+        <TelerikLoaderContainer LoaderPosition="@LoaderPosition.End"></TelerikLoaderContainer>
+    </div>
 }
 else
 {
-    <div class="same-row">
+    <div class="same-row margin-bottom">
         <div class="input-title">
             유저 명
         </div>
@@ -22,7 +24,7 @@ else
             </TelerikComboBox>
         </div>
     </div>
-    <div class="same-row">
+    <div class="same-row margin-bottom">
         <div class="input-title">
             은행 명
         </div>
@@ -46,7 +48,7 @@ else
             <TelerikNumericTextBox @bind-Value="@asset"></TelerikNumericTextBox>
         </div>
     </div>
-    <div class="btn-right">
+    <div class="btn-right btn-margin-top">
         <TelerikButton OnClick="Send"
                         Size="@ThemeConstants.Button.Size.Medium"
                         ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
