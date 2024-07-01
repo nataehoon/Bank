@@ -33,11 +33,11 @@ namespace BankApplication.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<SendAPI>> AddBank(string bankName)
+        public async Task<ActionResult<SendAPI>> AddBank(AddBank bank)
         {
             try
             {
-                string insert = $"INSERT INTO BANK(BANK_ID, BANK_NAME) VALUES('{Common.Common.CreateUUID()}', '{bankName}')";
+                string insert = $"INSERT INTO BANK(BANK_ID, BANK_NAME) VALUES('{Common.Common.CreateUUID()}', '{bank.BANK_NAME}')";
                 DBSet.NonSql(insert);
 
                 return SendMsg.APIMsg("ok", "");
@@ -50,11 +50,11 @@ namespace BankApplication.Controllers
         }
 
         [HttpPatch]
-        public async Task<ActionResult<SendAPI>> UpdateBank(string bankId, string bankName)
+        public async Task<ActionResult<SendAPI>> UpdateBank(Bank bank)
         {
             try
             {
-                string update = $"UPDATE BANK SET BANK_NAME='{bankName}' WHERE BANK_ID='{bankId}'";
+                string update = $"UPDATE BANK SET BANK_NAME='{bank.BANK_NAME}' WHERE BANK_ID='{bank.BANK_ID}'";
                 DBSet.NonSql(update);
 
                 return SendMsg.APIMsg("ok", "");
@@ -67,29 +67,29 @@ namespace BankApplication.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<SendAPI>> RemoveBank(string bankId)
+        public async Task<ActionResult<SendAPI>> RemoveBank(DeleteBank bank)
         {
             try
             {
                 List<string> sqlList = new();
-                string bankdelete = $"DELETE FROM BANK WHERE BANK_ID='{bankId}'";
+                string bankdelete = $"DELETE FROM BANK WHERE BANK_ID='{bank.BANK_ID}'";
                 sqlList.Add(bankdelete);
 
-                string assetselect = $"SELECT * FROM ASSETMANAGEMENT WHERE BANK_ID='{bankId}'";
+                string assetselect = $"SELECT * FROM ASSETMANAGEMENT WHERE BANK_ID='{bank.BANK_ID}'";
                 DataTable dt2 = DBSet.Select(assetselect);
                 string assetdata = JsonConvert.SerializeObject(dt2);
                 if (!string.IsNullOrEmpty(assetdata) && !assetdata.Equals("[]") && !assetdata.Equals("null"))
                 {
-                    string assetdelete = $"DELETE FROM ASSETMANAGEMENT WHERE BANK_ID='{bankId}'";
+                    string assetdelete = $"DELETE FROM ASSETMANAGEMENT WHERE BANK_ID='{bank.BANK_ID}'";
                     sqlList.Add(assetdelete);
                 }
 
-                string linkselect = $"SELECT * FROM MEM-BANK-LINK WHERE BANK_ID='{bankId}'";
+                string linkselect = $"SELECT * FROM MEM-BANK-LINK WHERE BANK_ID='{bank.BANK_ID}'";
                 DataTable dt = DBSet.Select(linkselect);
                 string linkdata = JsonConvert.SerializeObject(dt);
                 if (!string.IsNullOrEmpty(linkdata) && !linkdata.Equals("[]") && !linkdata.Equals("null"))
                 {
-                    string linkdelete = $"DELETE FROM MEM-BANK-LINK WHERE BANK_ID='{bankId}'";
+                    string linkdelete = $"DELETE FROM MEM-BANK-LINK WHERE BANK_ID='{bank.BANK_ID}'";
                     sqlList.Add(linkdelete);
                 }
 

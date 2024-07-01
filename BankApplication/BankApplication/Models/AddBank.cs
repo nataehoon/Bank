@@ -1,8 +1,7 @@
 ﻿namespace BankApplication.Models
 {
-    public class Bank
+    public class AddBank
     {
-        public string BANK_ID { get; set; }
         public string BANK_NAME { get; set; }
     }
 }

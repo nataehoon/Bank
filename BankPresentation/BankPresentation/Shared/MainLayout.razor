@@ -1,10 +1,95 @@
 ﻿@inherits LayoutComponentBase
 
 <TelerikRootComponent>
-    <div class="header">
-        <Header/>
-    </div>
-    <div>
-        @Body
+    <div class="container">
+        <div class="header">
+            <Header/>
+        </div>
+        <div class="layout-body">
+            <div class="mainmenu">
+                <div class="menuItem">
+                    <TelerikMenu Data="MenuItems" OnClick="@((MenuItem item) => SelectedMenu(item))"></TelerikMenu>
+                </div>
+            </div>
+            <p />
+            @Body
+        </div>
     </div>
 </TelerikRootComponent>
+
+@code{
+    public IEnumerable<MenuItem> MenuItems { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        MenuData();
+    }
+
+    private async Task SelectedMenu(MenuItem data)
+    {
+        try
+        {
+            if (data.Id.Equals("1"))
+            {
+                navManager.NavigateTo("/checkbalance");
+            }
+            else if (data.Id.Equals("2"))
+            {
+                navManager.NavigateTo("/addbank");
+            }
+            else if (data.Id.Equals("3"))
+            {
+                navManager.NavigateTo("/wire");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private void MenuData()
+    {
+        try
+        {
+            MenuItems = new List<MenuItem>()
+        {
+            new MenuItem()
+            {
+                Text = "전체 계좌 조회",
+                Id = "1"
+            },
+            new MenuItem()
+            {
+                Text = "계좌 등록",
+                Id = "2"
+            },
+            new MenuItem()
+            {
+                Text = "계좌 이체",
+                Id = "3"
+            },
+            // new MenuItem()
+            // {
+            //     Text = "Menu",
+            //     Disabled = true,
+            // },
+            // new MenuItem()
+            // {
+            //     Text = "TreeView",
+            //     Disabled = true
+            // },
+            // new MenuItem()
+            // {
+            //     Text = "Map",
+            //     Disabled = true
+            // }
+        };
+        }
+        catch (Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+}

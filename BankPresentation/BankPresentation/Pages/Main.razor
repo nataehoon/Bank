@@ -11,20 +11,13 @@ else
     <p/>
     <div class="mainImg">
         <TelerikCarousel Data="@CarouselData"
-                         Width="100%" Height="384px">
+                         Width="100%" Height="500px">
             <Template>
                 <div class="image-with-text">
-                    <p>Showing image @(context.ImageID) of @CarouselData.Count.ToString().</p>
-                    <img src="images/photos/@(context.ImageID).jpg" alt="Photograph" width="100%" height="384" />
+                    <img src="images/photos/@(context.ImageID).jpg" alt="Photograph" width="100%" height="500" />
                 </div>
             </Template>
         </TelerikCarousel>
-    </div>
-    <p />
-    <div class="mainmenu">
-        <div class="menuItem">
-            <TelerikMenu Data="MenuItems" OnClick="@((MenuItem item) => SelectedMenu(item))"></TelerikMenu>
-        </div>
     </div>
     <p />
     <div>
@@ -64,78 +57,9 @@ else
         try
         {
             CarouselData = Enumerable.Range(1, 7).Select(x => new CarouselModel
-        {
-            ImageID = x
-        }).ToList();
-
-            MenuData();
-        }
-        catch (Exception ex)
-        {
-            Logs.Exception(ex);
-        }
-    }
-
-    private async Task SelectedMenu(MenuItem data)
-    {
-        try
-        {
-            if (data.Id.Equals("1"))
             {
-                navManager.NavigateTo("/checkbalance");
-            }
-            else if (data.Id.Equals("2"))
-            {
-                navManager.NavigateTo("/addbank");
-            }
-            else if (data.Id.Equals("3"))
-            {
-                navManager.NavigateTo("/wire");
-            }
-        }
-        catch (Exception ex)
-        {
-            Logs.Exception(ex);
-        }
-    }
-
-    private void MenuData()
-    {
-        try
-        {
-            MenuItems = new List<MenuItem>()
-        {
-            new MenuItem()
-            {
-                Text = "전체 계좌 조회",
-                Id = "1"
-            },
-            new MenuItem()
-            {
-                Text = "계좌 등록",
-                Id = "2"
-            },
-            new MenuItem()
-            {
-                Text = "계좌 이체",
-                Id = "3"
-            },
-            new MenuItem()
-            {
-                Text = "Menu",
-                Disabled = true,
-            },
-            new MenuItem()
-            {
-                Text = "TreeView",
-                Disabled = true
-            },
-            new MenuItem()
-            {
-                Text = "Map",
-                Disabled = true
-            }
-        };
+                ImageID = x
+            }).ToList();
         }
         catch (Exception ex)
         {

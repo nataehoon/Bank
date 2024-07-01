@@ -9,7 +9,7 @@ namespace BankApplication.Controllers
     public class LoginController : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult<SendAPI>> Login(Member logindata)
+        public async Task<ActionResult<SendAPI>> Login(Login logindata)
         {
             try
             {

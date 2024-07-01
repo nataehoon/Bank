@@ -14,7 +14,7 @@ namespace BankPresentation.Service
             {
                 string data = "{ \"ID\":\"" + id + "\", \"PW\":\"" + pw + "\"}";
 
-                string result = APIService.PostAPI(data, "Login");
+                string result = APIService.API(data, "Login", "POST");
 
                 if (!string.IsNullOrEmpty(result))
                 {
@@ -42,7 +42,7 @@ namespace BankPresentation.Service
         {
             try
             {
-                string result = APIService.PostAPI("", "GetMemberList");
+                string result = APIService.API("", "GetMemberList", "POST");
 
                 string returnData = string.Empty;
                 JObject jdata = JObject.Parse(result);

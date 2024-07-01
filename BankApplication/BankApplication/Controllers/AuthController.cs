@@ -18,9 +18,9 @@ namespace BankApplication.Controllers
                 string select = "SELECT * FROM MEMBERS";
                 DataTable dt = DBSet.Select(select);
                 string memberList = JsonConvert.SerializeObject(dt);
-
+                
                 string result = "fail";
-                if (!string.IsNullOrEmpty(memberList) && memberList.Equals("[]"))
+                if (!string.IsNullOrEmpty(memberList) && !memberList.Equals("[]"))
                 {
                     result = "ok";
                 }
@@ -39,7 +39,7 @@ namespace BankApplication.Controllers
         {
             try
             {
-                string insert = $"INSERT INTO MEMBERS(ID, NAME, PW, EMAIL, IMG_URL) VALUES('{member.ID}', '{member.NAME}', '{member.PW}', '{member.EMAIL}', '{member.IMG_URL}')";
+                string insert = $"INSERT INTO MEMBERS(ID, NAME, PW, EMAIL, IMG_URL, LEVEL) VALUES('{member.ID}', '{member.NAME}', '{member.PW}', '{member.EMAIL}', '{member.IMG_URL}', '{member.LEVEL}')";
                 DBSet.NonSql(insert);
 
                 return SendMsg.APIMsg("ok", "");
@@ -56,7 +56,7 @@ namespace BankApplication.Controllers
         {
             try
             {
-                string update = $"UPDATE MEMBERS SET NAME='{member.NAME}', PW='{member.PW}', EMAIL='{member.EMAIL}', IMG_URL='{member.IMG_URL}' WHERE ID='{member.ID}'";
+                string update = $"UPDATE MEMBERS SET NAME='{member.NAME}', PW='{member.PW}', EMAIL='{member.EMAIL}', IMG_URL='{member.IMG_URL}', LEVEL='{member.LEVEL}' WHERE ID='{member.ID}'";
                 DBSet.NonSql(update);
 
                 return SendMsg.APIMsg("ok", "");
@@ -69,7 +69,7 @@ namespace BankApplication.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<SendAPI>> DeleteMember(Member member)
+        public async Task<ActionResult<SendAPI>> DeleteMember(DeleteMember member)
         {
             try
             {

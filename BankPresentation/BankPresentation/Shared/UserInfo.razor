@@ -6,7 +6,7 @@ else
 {
     <TelerikDropDownButton FillMode="@(ThemeConstants.Button.FillMode.Flat)">
         <DropDownButtonContent>
-            <img src="@CurrMember.IMG_URL" class="avata-image-sm" />
+            <img src="images/default/user-default.png" class="avata-image-sm" />
             @CurrMember.NAME
         </DropDownButtonContent>
         <DropDownButtonItems>
@@ -39,7 +39,6 @@ else
     {
         try
         {
-            Console.WriteLine("id : " + userId);
             string memberData = AuthService.GetMemberList();
             MemberList = JsonConvert.DeserializeObject<List<Member>>(memberData);
             CurrMember = MemberList.FirstOrDefault(x => x.ID.Equals(userId));

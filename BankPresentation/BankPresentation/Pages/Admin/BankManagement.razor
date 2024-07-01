@@ -8,14 +8,14 @@
 else
 {
     <div>
-        <div class="same-row">
-            <div style="width:10%">
+        <div class="same-row gap-sm">
+            <div class="input-title">
                 은행명
             </div>
-            <div style="width:80%">
+            <div class="input-content-btn">
                 <TelerikTextBox @bind-Value="@bankName" Placeholder="은행명을 입력하세요."></TelerikTextBox>
             </div>
-            <div style="width:10%">
+            <div class="btn-right input-btn">
                 <TelerikButton OnClick="AddBankSave"
                                 Size="@ThemeConstants.Button.Size.Medium"
                                 ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">
@@ -39,8 +39,8 @@ else
                 <GridExcelExport FileName="@ExcelFileName" AllPages="@ExportAllPages" OnBeforeExport="@OnBeforeExcelExport" />
             </GridExport>
             <GridColumns>
-                <GridColumn Field="@nameof(Bank.BANK_NAME)" Title="은행명"></GridColumn> 
-                <GridColumn>
+                <GridColumn Field="@nameof(Bank.BANK_NAME)" Title="은행명" Width="93%"></GridColumn> 
+                <GridColumn Width="7%">
                     <Template>
                         @{
                             var data = context as Bank;
@@ -98,7 +98,7 @@ else
     {
         try
         {
-            if (!string.IsNullOrEmpty(bankName))
+            if (string.IsNullOrEmpty(bankName))
             {
                 await Dialogs.AlertAsync("은행명을 입력해 주세요", "BankService");
                 return;
@@ -108,6 +108,7 @@ else
             if (apidata.Equals("ok"))
             {
                 await Dialogs.AlertAsync("성공적으로 저장되었습니다.", "BankService");
+                bankName = string.Empty;
             }
             else
             {
@@ -129,6 +130,12 @@ else
     {
         try
         {
+            bool confirmed = await Dialogs.ConfirmAsync("해당 은행을 삭제 하시면 해당 은행에 대한 자산 데이터도 함께 삭제 됩니다. 삭제 하시겠습니까?", "BankService");
+            if (!confirmed)
+            {
+                return;
+            }
+
             BankingService.RemoveBank(data.BANK_ID);
 
             bankList = new();

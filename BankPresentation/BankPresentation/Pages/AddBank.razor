@@ -8,43 +8,58 @@
 }
 else
 {
-    <h4>은행 추가</h4>
-
-    <div>
-        <span>이미 등록된 은행 리스트</span>
-        <div class="row same-row">
-            @foreach (var item in myBankList)
-            {
-                <div style="width:20%">
-                    @{
-                        var data = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
-                        if (data != null)
-                        {
-                            <span>@data.BANK_NAME</span>
+    <h4>계좌 등록</h4>
+    <hr/>
+    <div class="same-row">
+        <div class="linkbanklist">
+            <div class="addbanktitle">
+                <span class="addtitle">이미 등록된 은행 리스트</span>
+            </div>
+            <div class="same-row">
+                @foreach (var item in myBankList)
+                {
+                    <div class="same-row" style="width:20%">
+                        @{
+                            var data = bankList.FirstOrDefault(x => x.BANK_ID.Equals(item.BANK_ID));
+                            if (data != null)
+                            {
+                                <span>@data.BANK_NAME</span>
+                            }
                         }
-                    }
-                </div>
-            }
+                        <div>
+                            <TelerikButton OnClick="@(() => RemoveBank(data))"
+                                            Size="@ThemeConstants.Button.Size.Small"
+                                            FillMode="@ThemeConstants.Button.FillMode.Flat"
+                                            ThemeColor="@ThemeConstants.Button.ThemeColor.Error"
+                                            Icon="@SvgIcon.X"></TelerikButton>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
         <p />
-        <span>신규 은행 추가</span>
-        <div class="same-row">
-            <div style="width:95%">
-                <TelerikComboBox @bind-Value="@SelectedBank"
-                                 Data="@addBankList"
-                                 Placeholder="은행을 선택해 주세요"
-                                 TextField="@nameof(Bank.BANK_NAME)"
-                                 ValueField="@nameof(Bank.BANK_ID)">
-                    <ComboBoxSettings>
-                        <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
-                    </ComboBoxSettings>
-                </TelerikComboBox>
+        <div class="addbanklist">
+            <div class="addbanktitle">
+                <span class="addtitle">신규 은행 추가</span>
             </div>
-            <div style="width:5%">
-                <TelerikButton OnClick="AddBankBtn"
-                               Size="@ThemeConstants.Button.Size.Medium">
-                    추가
-                </TelerikButton>
+            <div class="same-row">
+                <div style="width:88%">
+                    <TelerikComboBox @bind-Value="@SelectedBank"
+                                     Data="@addBankList"
+                                     Placeholder="은행을 선택해 주세요"
+                                     TextField="@nameof(Bank.BANK_NAME)"
+                                     ValueField="@nameof(Bank.BANK_ID)">
+                        <ComboBoxSettings>
+                            <ComboBoxPopupSettings Height=""></ComboBoxPopupSettings>
+                        </ComboBoxSettings>
+                    </TelerikComboBox>
+                </div>
+                <div style="width:10%; margin-left:2%;">
+                    <TelerikButton OnClick="AddBankBtn"
+                                   Size="@ThemeConstants.Button.Size.Medium">
+                        추가
+                    </TelerikButton>
+                </div>
             </div>
         </div>
     </div>
@@ -83,26 +98,26 @@ else
     {
         try
         {
-            // string bankData = BankingService.GetBankList();
-            // if (!string.IsNullOrEmpty(bankData))
-            // {
-            //     bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
-            //     addBankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
-            // }
+            string bankData = BankingService.GetBankList();
+            if (!string.IsNullOrEmpty(bankData))
+            {
+                bankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+                addBankList = JsonConvert.DeserializeObject<List<Bank>>(bankData);
+            }
 
-            // string myBank = BankingService.GetMyBankList(userId);
-            // if (!string.IsNullOrEmpty(myBank))
-            // {
-            //     myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myBank);
-            // }
+            string myBank = BankingService.GetMyBankList(userId);
+            if (!string.IsNullOrEmpty(myBank))
+            {
+                myBankList = JsonConvert.DeserializeObject<List<MyBankInfo>>(myBank);
+            }
 
-            // if (bankList.Count() > 0 && myBankList.Count() > 0)
-            // {
-            //     foreach(var item in myBankList)
-            //     {
-            //         addBankList = addBankList.Where(x => !x.BANK_ID.Equals(item.BANK_ID)).ToList();
-            //     }
-            // }
+            if (bankList != null && myBankList.Count() != null)
+            {
+                foreach(var item in myBankList)
+                {
+                    addBankList = addBankList.Where(x => !x.BANK_ID.Equals(item.BANK_ID)).ToList();
+                }
+            }
         }
         catch(Exception ex)
         {
@@ -122,6 +137,34 @@ else
             }
 
             BankingService.AddMyBank(userId, SelectedBank);
+            LoadData();
+        }
+        catch(Exception ex)
+        {
+            Logs.Exception(ex);
+        }
+    }
+
+    private async Task RemoveBank(Bank data)
+    {
+        try
+        {
+            bool confirmed = await Dialogs.ConfirmAsync("등록된 은행을 삭제 하시겠습니까?", "BankService");
+            if (!confirmed)
+            {
+                return;
+            }
+
+            string result = BankingService.RemoveMyBank(userId, data.BANK_ID);
+            if (!string.IsNullOrEmpty(result))
+            {
+                await Dialogs.AlertAsync("삭제 되었습니다.", "BankService");
+            }
+            else
+            {
+                await Dialogs.AlertAsync("실패 하였습니다. 잠시 후 다시 시도해 주세요.", "BankService");
+            }
+
             LoadData();
         }
         catch(Exception ex)
